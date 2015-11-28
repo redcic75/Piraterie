@@ -1,7 +1,7 @@
 /*******************************************
  * Completez le programme a partir d'ici.
  *******************************************/
-class Navire{
+abstract class Navire{
 	private int x;
 	private int y;
 	private int drapeau;
@@ -30,7 +30,7 @@ class Navire{
 		y = Math.max(0, Math.min(Piraterie.MAX_Y, y));
 	}
 	
-	public void couler(){
+	public void coule(){
 		detruit = true;
 	}
 	
@@ -42,6 +42,17 @@ class Navire{
 		return getNom() + " avec drapeau " + drapeau + " en (<" + x + ">,<" + y + ">) - > ";
 	}
 	
+	public void rencontre(Navire n2){
+		if (!this.estDetruit() && !n2.estDetruit() && this.distance(n2) < Piraterie.RAYON_RENCONTRE && this.drapeau != n2.getDrapeau()){
+			combat(n2);
+		}
+	}
+	
+	public abstract boolean estPacifique();
+	
+	public abstract void recoitBoulet();
+	
+	public abstract void combat(Navire n2);
 	
 }
 
@@ -70,6 +81,26 @@ class Pirate extends Navire {
 			}
 		}
 	}
+	
+	public boolean estPacifique(){
+		return false;
+	}
+	
+	public void recoitBoulet(){
+		if(estEndommage()){
+			coule();
+		} else {
+			endommage = true;
+		}
+	}
+	
+	public void combat(Navire n2){
+		n2.recoitBoulet();
+		if(!n2.estPacifique()){
+			recoitBoulet();
+		}
+		
+	}
 }
 
 class Marchand extends Navire {
@@ -90,7 +121,19 @@ class Marchand extends Navire {
 		}
 	}
 	
+	public boolean estPacifique(){
+		return true;
+	}
 	
+	public void recoitBoulet(){
+		coule();
+	}
+	
+	public void combat(Navire n2){
+		if(!n2.estPacifique()){
+			recoitBoulet();
+		}
+	}
 }
 
 
