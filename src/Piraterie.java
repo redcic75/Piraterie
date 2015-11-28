@@ -1,7 +1,97 @@
 /*******************************************
  * Completez le programme a partir d'ici.
  *******************************************/
+class Navire{
+	private int x;
+	private int y;
+	private int drapeau;
+	private boolean detruit;
+	
+	public Navire(int x, int y, int drapeau){
+		this.x = Math.max(0, Math.min(Piraterie.MAX_X, x));
+		this.y = Math.max(0, Math.min(Piraterie.MAX_Y, y));
+		this.drapeau = drapeau;
+		this.detruit = false;
+	}
+	
+	public int getX(){return x;}
+	public int getY(){return y;}
+	public int getDrapeau(){return drapeau;}
+	public boolean estDetruit(){return detruit;}
+	
+	public double distance(Navire n2){
+		return Math.sqrt((x-n2.getX())*(x-n2.getX())+(y-n2.getY())*(y-n2.getY()));
+	}
+	
+	public void avance(int unitsX, int unitsY){
+		x += unitsX;
+		y += unitsY;
+		x = Math.max(0, Math.min(Piraterie.MAX_X, x));
+		y = Math.max(0, Math.min(Piraterie.MAX_Y, y));
+	}
+	
+	public void couler(){
+		detruit = true;
+	}
+	
+	public String getNom(){
+		return "Bateau";
+	}
+	
+	public String toString(){
+		return getNom() + " avec drapeau " + drapeau + " en (<" + x + ">,<" + y + ">) - > ";
+	}
+	
+	
+}
 
+class Pirate extends Navire {
+	private boolean endommage;
+	
+	public Pirate(int x, int y, int drapeau, boolean endommage){
+		super(x,y,drapeau);
+		this.endommage = endommage;
+	}
+	
+	public String getNom(){
+		return super.getNom() + " pirate";
+	}
+	
+	public boolean estEndommage(){return endommage;}
+	
+	public String toString(){
+		if(estDetruit()){
+			return super.toString() + "detruit";
+		} else {
+			if(estEndommage()){
+				return super.toString() + "ayant subi des dommages";
+			} else {
+				return super.toString() + "intact";
+			}
+		}
+	}
+}
+
+class Marchand extends Navire {
+	
+	public Marchand(int x, int y, int drapeau){
+		super(x,y,drapeau);
+	}
+	
+	public String getNom(){
+		return super.getNom() + " marchand";
+	}
+	
+	public String toString(){
+		if(estDetruit()){
+			return super.toString() + "detruit";
+		} else {
+			return super.toString() + "intact";
+		}
+	}
+	
+	
+}
 
 
 /*******************************************
